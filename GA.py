@@ -6,14 +6,7 @@ import time
 import json
 import sys
 
-threads=1
-if(len(sys.argv)==1):
-    print("Please include number of threads to use")
-elif(len(sys.argv)==2):
-    threads=int(sys.argv[1])
-else:
-    print("Too many arguments")
-    exit()
+
 st=time.time()
 
 #threads=6
@@ -71,12 +64,14 @@ numGens=1
 
 Data={ 
 }
-
+lastGen=0
 prevFitness=-99999
 def on_generation(ga_instance):
     global Data
     global numGens
     global prevFitness
+    global lastGen
+    global startTime
     if(numGens==1):
         randParent=np.random.randint(0,16)
         parents=ga_instance.last_generation_parents[randParent]
@@ -84,17 +79,22 @@ def on_generation(ga_instance):
         #parents[len(parents)-1]=floor
         #parents=parents.reshape(30*45)
         parentFitness=ga_instance.last_generation_fitness[ga_instance.last_generation_parents_indices[randParent]]
-        Data.update({"Generation0":np.ndarray.tolist(parents)})
+        #Data.update({"Generation0":np.ndarray.tolist(parents)})
         Data.update({"Generation0Fitness":int(parentFitness)})    
-    
-    #if(ga_instance.best_solution()[1]!=prevFitness):
-    curr=ga_instance.best_solution()[0].reshape(30,45)
-    floor=np.ones(45)
-    curr[len(curr)-1]=floor
-    curr=curr.reshape(30*45)
-    Data.update({"Generation"+str(numGens):np.ndarray.tolist(curr)})
-    Data.update({"Generation"+str(numGens)+"Fitness":int(ga_instance.best_solution()[1])})
-    numGens+=1
+        startTime=time.time()
+    if(ga_instance.best_solution()[1]!=prevFitness):
+        curr=ga_instance.best_solution()[0].reshape(30,45)
+        #floor=np.ones(45)
+        #curr[len(curr)-1]=floor
+        #curr=curr.reshape(30*45)
+        #Data.update({"Generation"+str(numGens):np.ndarray.tolist(curr)})
+        Data.update({"Generation"+str(numGens)+"Fitness":int(ga_instance.best_solution()[1])})
+        Data.update({"Generation"+str(numGens)+"Gens_Since_Last_Write":ga_instance.generations_completed-lastGen})
+        currTime=time.time()
+        Data.update({"Generation"+str(numGens)+"Time_Since_Last_Write":currTime-startTime})
+        startTime=currTime
+        lastGen=ga_instance.generations_completed
+        numGens+=1
     prevFitness=ga_instance.best_solution()[1]
     #initial.append(ga_instance.best_solution()[0])
     curr=ga_instance.best_solution()[0].reshape(30,45)
@@ -144,7 +144,7 @@ ga_instance = pygad.GA(num_generations=num_generations,
                        random_mutation_max_val=init_range_high,
                        random_mutation_min_val=init_range_low,
                        mutation_percent_genes=mutation_percent_genes,
-                       parallel_processing=threads, on_generation=on_generation, keep_elitism=15,mutation_probability=0.1)
+                       parallel_processing=None, on_generation=on_generation, keep_elitism=15,mutation_probability=0.1)
 
 
 ga_instance.run()
@@ -172,13 +172,13 @@ solution = np.reshape(np.array(solution), (30,45))
     #write the output to a text file
 floor=np.ones(45)
 solution[len(solution)-1]=floor
-et=time.time()
-elapsed=et-st
+#et=time.time()
+#elapsed=et-st
 if(ga_instance.best_solution()[1]>=0):
     Data.update({"NumSteps":numGens})
-    Data.update({"GenerationTime":elapsed})
+    #Data.update({"GenerationTime":elapsed})
     Data.update({"NumGens":ga_instance.generations_completed})
-    Levels_File="GA_Levels3"
+    Levels_File="GA_Stats"
 
     numLevels=len(os.listdir(Levels_File))
     outJson=json.dumps(Data,indent=4)

@@ -8,9 +8,9 @@ leveLoc="GA_Stats/"
 
 countSteps={}
 
-avgFitness=[]
-avgTimeSinceWrite=[]
-avgGensSinceWrite=[]
+avgFitness={}
+avgTimeSinceWrite={}
+avgGensSinceWrite={}
 levels=os.listdir(leveLoc)
 
 for i in levels:
@@ -19,9 +19,12 @@ for i in levels:
         numSteps=data["NumSteps"]
         gen=0
         for step in range(numSteps):
-            if(len(avgFitness)<=step):
-                avgFitness.append(0)
-            avgFitness[gen]+=(int(data["Generation"+str(step)+"Fitness"]))
+            
+            if(numSteps not in avgFitness):
+                avgFitness[numSteps]=[]
+            if(len(avgFitness[numSteps])<=step):
+                avgFitness[numSteps].append(0)
+            avgFitness[numSteps][gen]+=(int(data["Generation"+str(step)+"Fitness"]))
             if("Generation"+str(step)+"Fitness" in countsForFitness):
                 countsForFitness[str(step)]+=1
             else:
@@ -33,26 +36,71 @@ for i in levels:
         else:
             countSteps[str(numSteps)]=1
         for step in range(numSteps-1):
-            if(len(avgTimeSinceWrite)<=step):
-                avgTimeSinceWrite.append(0)
-                avgGensSinceWrite.append(0)
-            avgTimeSinceWrite[gen]+=(float(data["Generation"+str(step+1)+"Time_Since_Last_Write"]))
-            avgGensSinceWrite[gen]+=(int(data["Generation"+str(step+1)+"Gens_Since_Last_Write"]))
+            if(numSteps not in avgTimeSinceWrite):
+                avgTimeSinceWrite[numSteps]=[]
+                avgGensSinceWrite[numSteps]=[]
+            if(len(avgTimeSinceWrite[numSteps])<=step):
+                avgTimeSinceWrite[numSteps].append(0)
+                avgGensSinceWrite[numSteps].append(0)
+            avgTimeSinceWrite[numSteps][gen]+=(float(data["Generation"+str(step+1)+"Time_Since_Last_Write"]))
+            avgGensSinceWrite[numSteps][gen]+=(int(data["Generation"+str(step+1)+"Gens_Since_Last_Write"]))
             gen+=1
-            
-avgFitness=np.array(avgFitness)/len(levels)
-avgTimeSinceWrite=np.array(avgTimeSinceWrite)/len(levels)
-avgGensSinceWrite=np.array(avgGensSinceWrite)/len(levels)
+print(countSteps)
+for i in avgFitness.keys():
+    avgFitness[i]=np.array(avgFitness[i])/countSteps[str(i)]
+    
+for i in avgTimeSinceWrite.keys():
+    avgTimeSinceWrite[i]=np.array(avgTimeSinceWrite[i])/countSteps[str(i)]
+    avgGensSinceWrite[i]=np.array(avgGensSinceWrite[i])/countSteps[str(i)]
 
-print()
-bins=list(countSteps.keys())
-bins.sort()
-vals=list(countSteps.values())
-plt.bar(bins,vals)
+#sort avgFitmess keys
+# keys=list(avgFitness.keys())
+# keys=sorted(keys)
+
+# for i in keys:
+#     plt.plot(avgFitness[i],label="Saved Steps in Genration: "+str(i))
+# plt.title("Average Fitness Over Time")
+# plt.ylabel("Average Fitness")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.legend()
+# #plt.ylim(top=0)
+# #plt.savefig("./Graphs/Average Fitness Over Time Clipped.png")
+# plt.show()
+
+
+# keys=list(avgTimeSinceWrite.keys())
+# keys=sorted(keys)
+# for i in keys:
+#     plt.plot(avgTimeSinceWrite[i],label="Saved Steps in Genration: "+str(i))
+# plt.title("Average Time Between Writes")
+# plt.ylabel("Average Time Between Writes")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.legend()
+# plt.show()
+
+keys=list(avgGensSinceWrite.keys())
+keys=sorted(keys)
+for i in keys:
+    plt.plot(avgGensSinceWrite[i],label="Saved Steps in Genration: "+str(i))
+plt.title("Average Generations Between Writes")
+plt.ylabel("Average Generations Between Writes")
+plt.xlabel("Number of Steps in Generation Process")
+plt.legend()
+plt.show()
+
+
+
+
+
+# bins=list(countSteps.keys())
+# bins.sort()
+# vals=list(countSteps.values())
+# plt.bar(bins,vals)
 
 
 #plt.plot(avgFitness)
-#plt.title("Average Fitness Over Time")
-plt.ylabel("Count of Levels")
-plt.xlabel("Steps in Generation Process")
-plt.show()
+# plt.title("Average Fitness Over Time")
+# plt.ylabel("Count of Levels")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.savefig("./Graphs/Bar graph of num Steps per level.png")
+# plt.show()

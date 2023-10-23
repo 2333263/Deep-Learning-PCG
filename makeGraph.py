@@ -12,13 +12,22 @@ avgFitness={}
 avgTimeSinceWrite={}
 avgGensSinceWrite={}
 levels=os.listdir(leveLoc)
-
+allfitness=[]
+allTimeSinceWrite=[]
+allGensSinceWrite=[]
 for i in levels:
     with open(leveLoc+i,"r") as infile:
         data=json.load(infile)
         numSteps=data["NumSteps"]
         gen=0
         for step in range(numSteps):
+            if(len(allfitness)<=step):
+                allfitness.append(0)
+            allfitness[gen]+=(int(data["Generation"+str(step)+"Fitness"]))
+            
+            
+            
+            
             
             if(numSteps not in avgFitness):
                 avgFitness[numSteps]=[]
@@ -36,6 +45,14 @@ for i in levels:
         else:
             countSteps[str(numSteps)]=1
         for step in range(numSteps-1):
+            
+            if(len(allTimeSinceWrite)<=step):
+                allTimeSinceWrite.append(0)
+                allGensSinceWrite.append(0)
+            allTimeSinceWrite[gen]+=(float(data["Generation"+str(step+1)+"Time_Since_Last_Write"]))
+            allGensSinceWrite[gen]+=(int(data["Generation"+str(step+1)+"Gens_Since_Last_Write"]))
+            
+            
             if(numSteps not in avgTimeSinceWrite):
                 avgTimeSinceWrite[numSteps]=[]
                 avgGensSinceWrite[numSteps]=[]
@@ -78,18 +95,38 @@ for i in avgTimeSinceWrite.keys():
 # plt.legend()
 # plt.show()
 
-keys=list(avgGensSinceWrite.keys())
-keys=sorted(keys)
-for i in keys:
-    plt.plot(avgGensSinceWrite[i],label="Saved Steps in Genration: "+str(i))
+# keys=list(avgGensSinceWrite.keys())
+# keys=sorted(keys)
+# for i in keys:
+#     plt.plot(avgGensSinceWrite[i],label="Saved Steps in Genration: "+str(i))
+# plt.title("Average Generations Between Writes")
+# plt.ylabel("Average Generations Between Writes")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.legend()
+# plt.show()
+
+
+
+# allfitness=np.array(allfitness)/len(levels)
+# plt.plot(allfitness)
+# plt.title("Average Fitness Over Time")
+# plt.ylabel("Average Fitness")
+# plt.xlabel("Number of Steps in Generation Process")  
+# plt.show()
+
+# allTimeSinceWrite=np.array(allTimeSinceWrite)/len(levels)
+# plt.plot(allTimeSinceWrite)
+# plt.title("Average Time Between Writes")
+# plt.ylabel("Average Time Between Writes")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.show()
+
+allGensSinceWrite=np.array(allGensSinceWrite)/len(levels)
+plt.plot(allGensSinceWrite)
 plt.title("Average Generations Between Writes")
 plt.ylabel("Average Generations Between Writes")
 plt.xlabel("Number of Steps in Generation Process")
-plt.legend()
 plt.show()
-
-
-
 
 
 # bins=list(countSteps.keys())

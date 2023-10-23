@@ -87,11 +87,34 @@ def getModel(modelName):
     return model
 
 def main():
-    modelName="StandardNN"
+    #modelName="StandardNN"
     startLevel=np.random.randint(0,2,size=(30,45))
     
-    model=getModel(modelName)
-    level=copy.deepcopy(startLevel)
+    
+    floor=np.ones(45)
+    copyLevel=copy.deepcopy(startLevel)
+    copyLevel[len(copyLevel)-1]=floor
+    
+    diffLevel=getLevelDifference(startLevel,copyLevel)
+    
+    
+    fig,axes=plt.subplots(1,3)
+    ax=axes.ravel()
+    ax[0].imshow(startLevel,cmap="gray")
+    ax[0].set_title("Random Level")
+    ax[0].axis("off")
+    
+    ax[1].imshow(copyLevel,cmap="gray")
+    ax[1].set_title("Level are x many generations")
+    ax[1].axis("off")
+    
+    ax[2].imshow(diffLevel)
+    ax[2].set_title("Difference")
+    ax[2].axis("off")
+    
+    plt.show()
+   # model=getModel(modelName)
+   # level=copy.deepcopy(startLevel)
     
     
     

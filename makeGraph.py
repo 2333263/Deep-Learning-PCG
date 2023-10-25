@@ -121,12 +121,12 @@ for i in avgTimeSinceWrite.keys():
 # plt.xlabel("Number of Steps in Generation Process")
 # plt.show()
 
-allGensSinceWrite=np.array(allGensSinceWrite)/len(levels)
-plt.plot(allGensSinceWrite)
-plt.title("Average Generations Between Writes")
-plt.ylabel("Average Generations Between Writes")
-plt.xlabel("Number of Steps in Generation Process")
-plt.show()
+# allGensSinceWrite=np.array(allGensSinceWrite)/len(levels)
+# plt.plot(allGensSinceWrite)
+# plt.title("Average Generations Between Writes")
+# plt.ylabel("Average Generations Between Writes")
+# plt.xlabel("Number of Steps in Generation Process")
+# plt.show()
 
 
 # bins=list(countSteps.keys())

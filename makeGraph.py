@@ -92,19 +92,19 @@ aveGenerationsPercent=aveGenerationsPercent/len(levels)
 # plt.show()
 
 
-#sort avgFitmess keys
+# #sort avgFitmess keys
 # keys=list(avgFitness.keys())
 # keys=sorted(keys)
 
 # for i in keys:
-#     if(countSteps[str(i)]>40):
+#     #if(countSteps[str(i)]>40):
 #         plt.plot(avgFitness[i],label="Saved Steps in Genration: "+str(i))
 # plt.title("Average Fitness Over Time")
 # plt.ylabel("Average Fitness")
 # plt.xlabel("Number of Steps in Generation Process")
 # plt.legend()
-# plt.ylim(top=0)
-# #plt.savefig("./Graphs/Average Fitness Over Time Clipped.png")
+# #plt.ylim(top=0)
+# #plt.savefig("./Graphs/Average Fitness Over Time Clipped.pdf")
 # plt.show()
 
 
@@ -119,18 +119,17 @@ aveGenerationsPercent=aveGenerationsPercent/len(levels)
 # plt.legend()
 # plt.show()
 
-# keys=list(avgGensSinceWrite.keys())
-# keys=sorted(keys)
-# for i in keys:
-#     if(countSteps[str(i)]>40):
-#         plt.plot(avgGensSinceWrite[i],label="Saved Steps in Genration: "+str(i))
-# plt.title("Average Generations Between Writes")
-# plt.ylabel("Average Generations Between Writes")
-# plt.xlabel("Number of Steps in Generation Process")
-# plt.legend()
-# plt.show()
-
-
+keys=list(avgGensSinceWrite.keys())
+keys=sorted(keys)
+for i in keys:
+    #if(countSteps[str(i)]>40):
+    plt.plot(avgGensSinceWrite[i],label="Saved Steps in Genration: "+str(i))
+plt.title("Average Generations Between Writes")
+plt.ylabel("Average Generations Between Writes")
+plt.xlabel("Number of Steps in Generation Process")
+plt.legend()
+#plt.savefig("./Graphs/GenerationsSinceLastWrite_outliers_removed_with_outliers.pdf")
+plt.show()
 
 # allfitness=np.array(allfitness)/len(levels)
 # plt.plot(allfitness)
@@ -160,32 +159,32 @@ aveGenerationsPercent=aveGenerationsPercent/len(levels)
 # for i in bins:
 #     newVals.append(countSteps[i])
 
-# #vals=list(countSteps.values())
+# vals=list(countSteps.values())
 # plt.bar(bins,newVals)
 # plt.ylabel("Count of Levels")
 # plt.xlabel("Number of Saved Steps in the Generation Process")
-# plt.savefig("./Graphs/Bar graph of num Steps per level.png")
-# plt.show()
+# 
+#plt.show()
 #plt.plot(avgFitness)
-# plt.title("Average Fitness Over Time")
-# plt.ylabel("Count of Levels")
-# plt.xlabel("Number of Steps in Generation Process")
-# plt.savefig("./Graphs/Bar graph of num Steps per level.png")
+#plt.title("Average Fitness Over Time")
+#plt.ylabel("Count of Levels")
+#plt.xlabel("Number of Steps in Generation Process")
+#plt.savefig("./Graphs/Bar graph of num Steps per level.png")
 #plt.show()
 
 
-leveLoc="GA_Levels2/"
-levels=os.listdir(leveLoc)
-aveGenTime=0
-aveGens=0
+# leveLoc="GA_Levels2/"
+# levels=os.listdir(leveLoc)
+# aveGenTime=0
+# aveGens=0
         
-for i in levels:
-    with open(leveLoc+i,"r") as infile:
-        data=json.load(infile)
-        aveGenTime+=float(data["GenerationTime"])
-        aveGens+=int(data["NumGens"])
+# for i in levels:
+#     with open(leveLoc+i,"r") as infile:
+#         data=json.load(infile)
+#         aveGenTime+=float(data["GenerationTime"])
+#         aveGens+=int(data["NumGens"])
         
-aveGenTime=aveGenTime/len(levels)
-aveGens=aveGens/len(levels)
-print(aveGenTime)
-print(aveGens)
+# aveGenTime=aveGenTime/len(levels)
+# aveGens=aveGens/len(levels)
+# print(aveGenTime)
+# print(aveGens)
